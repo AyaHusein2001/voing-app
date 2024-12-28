@@ -1,13 +1,31 @@
-import React from 'react'
+import React from "react";
+import { useAuth } from "../contexts/authContext";
 
-const Item = ({item,handleVote,voted}) => {
+const Item = ({ item, handleVote, voted }) => {
+  const { userLoggedIn } = useAuth();
   return (
-    <li>
-    <p> {item.label}</p>
-    {!voted&&(<button onClick={()=>handleVote(item)}>Vote</button>)}
-    {voted&&(<p className='vote'>Votes: {item.votes}</p>)}
+    <li className="vote">
+      <h2> {item.title}</h2>
+      <ul className="options">
+        {item.options.map((option, index) => {
+          return (
+            <li className="option-li">
+              <p>{option.label}</p>
+              {!voted && userLoggedIn && (
+                <button
+                  className="vote-button"
+                  onClick={() => handleVote(item.id, index)}
+                >
+                  Vote
+                </button>
+              )}
+              {voted && <p className="vote-number">Votes: {option.votes}</p>}
+            </li>
+          );
+        })}
+      </ul>
     </li>
-  )
-}
+  );
+};
 
-export default Item
+export default Item;
